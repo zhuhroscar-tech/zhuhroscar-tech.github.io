@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">OZ</title>
+  <rect width="128" height="128" rx="28" fill="#0b0b0c"/>
+  <path d="M22 64c0-24 14-40 36-40s36 16 36 40-14 40-36 40S22 88 22 64Zm19 0c0 15 6 24 17 24s17-9 17-24-6-24-17-24-17 9-17 24Z" fill="#f5f5f7"/>
+  <path d="M83 25h27v13L92 90h19v14H78V91l18-52H83V25Z" fill="#75aaff"/>
+</svg>
