@@ -1,5 +1,7 @@
 # Oscar Zhu — portfolio
 
+![zhuhroscar-tech.github.io homepage](docs/images/homepage.png)
+
 Source for [zhuhroscar-tech.github.io](https://zhuhroscar-tech.github.io/), a static portfolio focused on verified public software.
 
 ## Local preview
