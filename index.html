@@ -39,7 +39,7 @@
       "@type": "CollegeOrUniversity",
       "name": "Washington University in St. Louis"
     },
-    "knowsAbout": ["macOS development", "Swift", "SwiftUI", "quantitative finance"]
+    "knowsAbout": ["macOS development", "Linux development", "Swift", "SwiftUI", "machine learning reliability", "numerical analysis", "quantitative finance"]
   }
   </script>
 </head>
@@ -54,6 +54,7 @@
     </button>
     <nav id="site-nav" aria-label="Main navigation">
       <a href="#work">Work</a>
+      <a href="#lab">ML lab</a>
       <a href="#about">About</a>
       <a href="#principles">Principles</a>
       <a href="#connect">Connect</a>
@@ -134,9 +135,36 @@
       </article>
     </section>
 
+    <section class="lab-section" id="lab" aria-labelledby="lab-title">
+      <div class="section-heading reveal">
+        <p class="eyebrow">02 / ML reliability lab</p>
+        <h2 id="lab-title">Tools for catching silent failure.</h2>
+      </div>
+      <div class="lab-grid reveal">
+        <article class="lab-item">
+          <p class="project-index">01</p>
+          <h3><a href="https://github.com/zhuhroscar-tech/numguard">numguard</a></h3>
+          <p>Adversarial fixtures and high-precision references for numerical ML kernels. It makes a plausible-looking result answer to a stricter question: is it actually correct?</p>
+          <a class="text-link" href="https://github.com/zhuhroscar-tech/numguard/releases/latest">Explore releases <span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="lab-item">
+          <p class="project-index">02</p>
+          <h3><a href="https://github.com/zhuhroscar-tech/qdrift">qdrift</a></h3>
+          <p>An exact-oracle checker for affine INT8 quantization arithmetic, focused on round boundaries and cross-scale additions where small errors become model errors.</p>
+          <a class="text-link" href="https://github.com/zhuhroscar-tech/qdrift/releases/latest">Explore releases <span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="lab-item">
+          <p class="project-index">03</p>
+          <h3><a href="https://github.com/zhuhroscar-tech/recallwatch">recallwatch</a></h3>
+          <p>A segmented monitor for approximate-nearest-neighbor indexes that looks for tail-query recall collapse instead of hiding it inside one average score.</p>
+          <a class="text-link" href="https://github.com/zhuhroscar-tech/recallwatch/releases/latest">Explore releases <span aria-hidden="true">↗</span></a>
+        </article>
+      </div>
+    </section>
+
     <section class="about-section" id="about" aria-labelledby="about-title">
       <div class="section-heading reveal">
-        <p class="eyebrow">02 / About</p>
+        <p class="eyebrow">03 / About</p>
         <h2 id="about-title">Software, markets, and the decisions between them.</h2>
       </div>
       <div class="about-grid reveal">
@@ -150,7 +178,7 @@
 
     <section class="principles-section" id="principles" aria-labelledby="principles-title">
       <div class="section-heading reveal">
-        <p class="eyebrow">03 / Principles</p>
+        <p class="eyebrow">04 / Principles</p>
         <h2 id="principles-title">What I look for in my own work.</h2>
       </div>
       <ol class="principles-list reveal">
@@ -162,7 +190,7 @@
     </section>
 
     <section class="connect-section" id="connect" aria-labelledby="connect-title">
-      <p class="eyebrow">04 / Connect</p>
+      <p class="eyebrow">05 / Connect</p>
       <div class="connect-grid">
         <h2 id="connect-title">Interested in careful software and quantitative work?</h2>
         <div>
