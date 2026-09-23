@@ -26,6 +26,7 @@ Open <http://localhost:8000>. Run the server from the repository root so relativ
 - [`assets/`](assets/): project images, favicon, and social preview image.
 - [`404.html`](404.html), [`robots.txt`](robots.txt), and [`sitemap.xml`](sitemap.xml): supporting web files.
 - [`tests/test_site.py`](tests/test_site.py): static site contract tests.
+- [`LICENSE`](LICENSE): MIT license for the repository source.
 
 The site is plain HTML, CSS, and JavaScript. There is no separate generated output to create before previewing these files.
 

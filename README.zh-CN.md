@@ -26,6 +26,7 @@ python3 -m http.server 8000 --bind 127.0.0.1
 - [`assets/`](assets/)：项目图片、favicon 和社交分享预览图。
 - [`404.html`](404.html)、[`robots.txt`](robots.txt)、[`sitemap.xml`](sitemap.xml)：网站辅助文件。
 - [`tests/test_site.py`](tests/test_site.py)：静态网站约束测试。
+- [`LICENSE`](LICENSE)：仓库源码的 MIT 许可证。
 
 网站使用原生 HTML、CSS 和 JavaScript，预览前不需要生成额外的构建目录。
 
