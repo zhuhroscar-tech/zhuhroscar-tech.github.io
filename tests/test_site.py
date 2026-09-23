@@ -90,10 +90,15 @@ class PortfolioContractTests(unittest.TestCase):
         self.assertIn("Oscar Zhu", self.parser.title)
         description = self.meta_content(name="description")
         self.assertGreaterEqual(len(description), 80)
+        self.assertIn("Mathematics and Financial Engineering", description)
         self.assertNotIn("noindex", self.html.lower())
         self.assertIn(f'<link rel="canonical" href="{SITE_URL}">', self.html)
         self.assertEqual(self.meta_content(prop="og:url"), SITE_URL)
         self.assertTrue(self.meta_content(prop="og:image").endswith("/assets/og-card.png"))
+
+    def test_academic_program_copy_is_current(self) -> None:
+        self.assertIn("Mathematics and Financial Engineering", self.html)
+        self.assertNotIn("Mathematical Sciences and Financial Engineering", self.html)
 
     def test_core_sections_and_verified_project_links(self) -> None:
         for section_id in {"work", "about", "principles", "connect"}:
@@ -144,6 +149,7 @@ class PortfolioContractTests(unittest.TestCase):
             "404.html",
             "assets/favicon.svg",
             "assets/og-card.png",
+            "LICENSE",
         }:
             self.assertTrue((ROOT / relative).is_file(), relative)
 
