@@ -26,6 +26,7 @@ Open <http://localhost:8000>. Run the server from the repository root so relativ
 - [`assets/`](assets/): project images, favicon, and social preview image.
 - [`404.html`](404.html), [`robots.txt`](robots.txt), and [`sitemap.xml`](sitemap.xml): supporting web files.
 - [`tests/test_site.py`](tests/test_site.py): static site contract tests.
+- [`CHANGELOG.md`](CHANGELOG.md): release history and maintenance notes.
 - [`LICENSE`](LICENSE): MIT license for the repository source.
 
 The site is plain HTML, CSS, and JavaScript. There is no separate generated output to create before previewing these files.
@@ -39,6 +40,8 @@ python3 -m unittest discover -s tests -v
 Tests check identity and search metadata, structured-data JSON, manifest and sitemap consistency, required sections and project links, local images and alt text, navigation targets, supporting files, selected contrast ratios, and the absence of legacy unverified experience copy. The [validation workflow](.github/workflows/validate.yml) runs these checks on pushes and pull requests.
 
 Passing tests is not a complete visual or accessibility review. Preview changes in a browser, check narrow-screen navigation, and verify that links and images remain useful.
+
+See [`CHANGELOG.md`](CHANGELOG.md) for release history.
 
 ## Content policy
 

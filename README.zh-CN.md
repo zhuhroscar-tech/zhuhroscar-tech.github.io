@@ -26,6 +26,7 @@ python3 -m http.server 8000 --bind 127.0.0.1
 - [`assets/`](assets/)：项目图片、favicon 和社交分享预览图。
 - [`404.html`](404.html)、[`robots.txt`](robots.txt)、[`sitemap.xml`](sitemap.xml)：网站辅助文件。
 - [`tests/test_site.py`](tests/test_site.py)：静态网站约束测试。
+- [`CHANGELOG.md`](CHANGELOG.md)：发布历史与维护记录。
 - [`LICENSE`](LICENSE)：仓库源码的 MIT 许可证。
 
 网站使用原生 HTML、CSS 和 JavaScript，预览前不需要生成额外的构建目录。
@@ -39,6 +40,8 @@ python3 -m unittest discover -s tests -v
 测试覆盖身份与搜索元数据、结构化数据 JSON、manifest 与 sitemap 一致性、必要页面区块与项目链接、本地图片及 alt 文本、导航目标、辅助文件、部分颜色对比度，以及旧版未经验证的经历描述是否已移除。[验证工作流](.github/workflows/validate.yml)在 push 和 pull request 时运行这些检查。
 
 测试通过不等于完成了视觉或无障碍审查。修改后仍需在浏览器中预览，检查窄屏导航，确认链接和图片正常且有意义。
+
+发布历史见 [`CHANGELOG.md`](CHANGELOG.md)。
 
 ## 内容规范
 

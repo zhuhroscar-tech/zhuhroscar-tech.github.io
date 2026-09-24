@@ -151,9 +151,23 @@ class PortfolioContractTests(unittest.TestCase):
             "404.html",
             "assets/favicon.svg",
             "assets/og-card.png",
+            "CHANGELOG.md",
             "LICENSE",
         }:
             self.assertTrue((ROOT / relative).is_file(), relative)
+
+    def test_readmes_link_release_history_and_license(self) -> None:
+        for relative in ("README.md", "README.zh-CN.md"):
+            text = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertIn("CHANGELOG.md", text, relative)
+            self.assertIn("LICENSE", text, relative)
+
+    def test_changelog_documents_current_release(self) -> None:
+        changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        self.assertIn("## v0.1.2 — 2026-09-24", changelog)
+        self.assertIn("## v0.1.1 — 2026-09-24", changelog)
+        self.assertIn("## v0.1.0 — 2026-09-23", changelog)
+        self.assertIn("repository-contract coverage", changelog)
 
     def test_no_placeholder_copy_or_dead_hash_links(self) -> None:
         self.assertNotRegex(self.html.lower(), r"\b(todo|lorem ipsum|coming soon)\b")
