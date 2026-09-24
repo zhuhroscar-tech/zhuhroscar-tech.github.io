@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import json
 import re
 import unittest
+import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
@@ -169,6 +171,41 @@ class PortfolioContractTests(unittest.TestCase):
         self.assertIn('href="/styles.css"', not_found)
         self.assertIn('href="/assets/favicon.svg"', not_found)
         self.assertIn('href="/"', not_found)
+
+    def test_structured_data_is_valid_public_identity_json(self) -> None:
+        match = re.search(
+            r'<script type="application/ld\+json">\s*(.*?)\s*</script>',
+            self.html,
+            re.DOTALL,
+        )
+        if match is None:
+            self.fail("Missing JSON-LD Person metadata")
+        data = json.loads(match.group(1))
+        self.assertEqual(data["@context"], "https://schema.org")
+        self.assertEqual(data["@type"], "Person")
+        self.assertEqual(data["name"], "Oscar Zhu")
+        self.assertEqual(data["url"], SITE_URL)
+        self.assertIn("https://github.com/zhuhroscar-tech", data["sameAs"])
+        self.assertIn("https://www.linkedin.com/in/huairuizhu/", data["sameAs"])
+        self.assertEqual(data["affiliation"]["name"], "Washington University in St. Louis")
+
+    def test_manifest_and_sitemap_match_published_site_url(self) -> None:
+        manifest = json.loads((ROOT / "site.webmanifest").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["name"], "Oscar Zhu — Portfolio")
+        self.assertEqual(manifest["start_url"], "/")
+        self.assertEqual(manifest["theme_color"], "#0b0b0c")
+        icon_paths = {icon["src"] for icon in manifest.get("icons", [])}
+        self.assertIn("assets/favicon.svg", icon_paths)
+        for icon_path in icon_paths:
+            self.assertTrue((ROOT / icon_path).is_file(), icon_path)
+
+        sitemap = ET.parse(ROOT / "sitemap.xml")
+        namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        locations = [node.text for node in sitemap.findall(".//sm:loc", namespace)]
+        self.assertEqual(locations, [SITE_URL])
+
+        robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
+        self.assertIn(f"Sitemap: {SITE_URL}sitemap.xml", robots)
 
     def test_wordmark_accessible_names_include_visible_text(self) -> None:
         wordmarks = [
