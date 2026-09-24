@@ -36,7 +36,7 @@ The site is plain HTML, CSS, and JavaScript. There is no separate generated outp
 python3 -m unittest discover -s tests -v
 ```
 
-Tests check identity and search metadata, required sections and project links, local images and alt text, navigation targets, supporting files, selected contrast ratios, and the absence of legacy unverified experience copy. The [validation workflow](.github/workflows/validate.yml) runs these checks on pushes and pull requests.
+Tests check identity and search metadata, structured-data JSON, manifest and sitemap consistency, required sections and project links, local images and alt text, navigation targets, supporting files, selected contrast ratios, and the absence of legacy unverified experience copy. The [validation workflow](.github/workflows/validate.yml) runs these checks on pushes and pull requests.
 
 Passing tests is not a complete visual or accessibility review. Preview changes in a browser, check narrow-screen navigation, and verify that links and images remain useful.
 
