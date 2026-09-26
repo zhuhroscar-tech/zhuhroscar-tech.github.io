@@ -2,6 +2,10 @@
 
 All notable changes to this repository are documented here.
 
+## v0.1.3 — 2026-09-26
+
+- Made validation workflow release-tag coverage explicit for `v*` tags and added repository-contract coverage for that release-tag validation path.
+
 ## v0.1.2 — 2026-09-24
 
 - Added release-history documentation and repository-contract coverage so the static portfolio keeps a visible maintenance trail.
