@@ -2,6 +2,10 @@
 
 All notable changes to this repository are documented here.
 
+## v0.1.4 — 2026-09-27
+
+- Updated English and Simplified Chinese validation docs to explicitly mention `v*` release-tag checks, and added repository-contract coverage so the docs stay aligned with workflow triggers.
+
 ## v0.1.3 — 2026-09-26
 
 - Made validation workflow release-tag coverage explicit for `v*` tags and added repository-contract coverage for that release-tag validation path.

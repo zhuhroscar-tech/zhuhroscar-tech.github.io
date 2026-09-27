@@ -164,12 +164,19 @@ class PortfolioContractTests(unittest.TestCase):
 
     def test_changelog_documents_current_release(self) -> None:
         changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        self.assertIn("## v0.1.4 — 2026-09-27", changelog)
         self.assertIn("## v0.1.3 — 2026-09-26", changelog)
         self.assertIn("## v0.1.2 — 2026-09-24", changelog)
         self.assertIn("## v0.1.1 — 2026-09-24", changelog)
         self.assertIn("## v0.1.0 — 2026-09-23", changelog)
         self.assertIn("release-tag validation", changelog)
         self.assertIn("repository-contract coverage", changelog)
+
+    def test_readmes_document_release_tag_validation(self) -> None:
+        for relative in ("README.md", "README.zh-CN.md"):
+            readme = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertIn("validate.yml", readme, relative)
+            self.assertIn("v*", readme, relative)
 
     def test_validation_workflow_runs_on_release_tags(self) -> None:
         workflow = (ROOT / ".github" / "workflows" / "validate.yml").read_text(encoding="utf-8")
