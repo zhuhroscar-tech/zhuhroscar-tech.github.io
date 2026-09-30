@@ -172,6 +172,21 @@ class PortfolioContractTests(unittest.TestCase):
         self.assertIn("release-tag validation", changelog)
         self.assertIn("repository-contract coverage", changelog)
 
+    def test_no_orphaned_docs_files(self) -> None:
+        docs_dir = ROOT / "docs"
+        readme_text = (ROOT / "README.md").read_text(encoding="utf-8")
+        readme_zh_text = (ROOT / "README.zh-CN.md").read_text(encoding="utf-8")
+        changelog_text = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        linked_text = readme_text + readme_zh_text + changelog_text
+        for path in docs_dir.rglob("*"):
+            if path.is_file():
+                relative = path.relative_to(ROOT).as_posix()
+                self.assertIn(
+                    relative,
+                    linked_text,
+                    f"{relative} is committed under docs/ but not linked from any README or CHANGELOG",
+                )
+
     def test_readmes_document_release_tag_validation(self) -> None:
         for relative in ("README.md", "README.zh-CN.md"):
             readme = (ROOT / relative).read_text(encoding="utf-8")

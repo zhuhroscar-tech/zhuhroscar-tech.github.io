@@ -6,6 +6,8 @@ Source for [zhuhroscar-tech.github.io](https://zhuhroscar-tech.github.io/), a st
 
 ![Portfolio homepage](docs/images/homepage.png)
 
+[Watch the project demonstration](docs/demo.mp4) for a short walkthrough of the published site.
+
 ## Local preview
 
 You need Git, Python 3, and a browser. There is no package installation, framework build, or backend service required for local preview.
