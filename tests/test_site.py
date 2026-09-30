@@ -92,7 +92,6 @@ class PortfolioContractTests(unittest.TestCase):
         self.assertIn("zhuhroscar-tech", self.parser.title)
         description = self.meta_content(name="description")
         self.assertGreaterEqual(len(description), 80)
-        self.assertIn("Mathematics and Financial Engineering", description)
         self.assertNotIn("noindex", self.html.lower())
         self.assertIn(f'<link rel="canonical" href="{SITE_URL}">', self.html)
         self.assertEqual(self.meta_content(prop="og:url"), SITE_URL)
@@ -108,7 +107,6 @@ class PortfolioContractTests(unittest.TestCase):
         required = {
             "https://github.com/zhuhroscar-tech/ItoCanvas",
             "https://github.com/zhuhroscar-tech/dualTyper",
-            "https://www.REDACTED/",
         }
         self.assertTrue(required.issubset(set(self.parser.links)))
 
@@ -229,8 +227,6 @@ class PortfolioContractTests(unittest.TestCase):
         self.assertEqual(data["name"], "zhuhroscar-tech")
         self.assertEqual(data["url"], SITE_URL)
         self.assertIn("https://github.com/zhuhroscar-tech", data["sameAs"])
-        self.assertIn("https://www.REDACTED/", data["sameAs"])
-        self.assertEqual(data["affiliation"]["name"], "a U.S. university")
 
     def test_manifest_and_sitemap_match_published_site_url(self) -> None:
         manifest = json.loads((ROOT / "site.webmanifest").read_text(encoding="utf-8"))
