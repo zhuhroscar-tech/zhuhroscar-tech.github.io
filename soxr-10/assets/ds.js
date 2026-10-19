@@ -348,6 +348,25 @@ function renderMetrics() {
   };
   for (const k in F) document.querySelectorAll(`[data-f="${k}"]`).forEach(e => e.textContent = F[k]);
 }
+function labelTables() {
+  document.querySelectorAll(".tbl table").forEach(table => {
+    const head = table.querySelector("thead tr") || [...table.rows].find(row =>
+      row.cells.length && [...row.cells].every(cell => cell.tagName === "TH"));
+    if (!head) return;
+    if (!head.closest("thead")) {
+      head.classList.add("mobile-head");
+      [...head.cells].forEach(cell => { cell.scope = "col"; });
+    }
+    const labels = [...head.cells].map((cell, i) => cell.innerText.trim() || `Column ${i + 1}`);
+    [...table.rows].filter(row => row !== head && row.closest("tbody")).forEach(row => {
+      [...row.cells].forEach((cell, i) => {
+        const label = labels[i] || "";
+        cell.dataset.label = label;
+        if (label) cell.setAttribute("aria-label", `${label}: ${cell.innerText.trim()}`);
+      });
+    });
+  });
+}
 const PAGES = {
   overview() { typical($("#typical")); pinout($("#pinout")); pinMini($("#pinmini")); compareTable($("#compare")); onTheme(() => pinout($("#pinout"))); },
   performance() { navFigures($("#fig-nav"), { dd: true }); elecTable($("#elec")); trailingTable($("#trailing")); calendarTable($("#calendar")); monthlyTable($("#monthly")); navHistory($("#navhist")); },
@@ -356,6 +375,6 @@ const PAGES = {
     onTheme(() => { pinout($("#pinout")); rotation($("#rot")); exposurePlot($("#expo")); }); },
   research() {}, notices() {},
 };
-fetch("assets/data.json").then(r => r.json()).then(d => { D = d; renderMetrics(); PAGES[$("[data-page]")?.dataset.page]?.(); })
+fetch("assets/data.json").then(r => r.json()).then(d => { D = d; renderMetrics(); PAGES[$("[data-page]")?.dataset.page]?.(); labelTables(); })
   .catch(e => $("main")?.insertAdjacentHTML("afterbegin", `<p class="notes">Data failed to load (${e.message}). Reload the page.</p>`));
 })();
