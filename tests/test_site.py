@@ -241,7 +241,7 @@ class PortfolioContractTests(unittest.TestCase):
         sitemap = ET.parse(ROOT / "sitemap.xml")
         namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
         locations = [node.text for node in sitemap.findall(".//sm:loc", namespace)]
-        self.assertEqual(locations, [SITE_URL])
+        self.assertEqual(locations, [SITE_URL, f"{SITE_URL}oscar/"])
 
         robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
         self.assertIn(f"Sitemap: {SITE_URL}sitemap.xml", robots)
