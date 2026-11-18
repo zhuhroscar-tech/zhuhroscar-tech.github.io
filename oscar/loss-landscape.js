@@ -229,7 +229,7 @@
     function draw() {
       frameQueued = false;
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+      ctx.clearRect(0, 0, W, H); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
       if (contourLayer) ctx.drawImage(contourLayer, 0, 0, W, H);
 
       ctx.font = getComputedStyle(root).font;
