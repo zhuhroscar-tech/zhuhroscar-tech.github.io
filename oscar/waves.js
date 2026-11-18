@@ -171,21 +171,24 @@
       'a......xxxx', 'a.....x....', 'a....x.....', 'a....x.....', 'a....x.....', 'a....x.....', 'a...x......', 'xxxx.aaaaaa'] },
   ];
   const PIX = 3;   // screen pixels per sprite pixel
+  const BAKE = 4;  // sprites are pre-rendered 4x larger, then drawn smoothly scaled down
 
   // pre-render each sprite (and a mirrored copy for fish swimming the other way)
   function bake(sp, flip) {
     const w = sp.px[0].length, hgt = sp.px.length;
     const c = document.createElement('canvas');
-    c.width = w * PIX; c.height = hgt * PIX;
+    const q = PIX * BAKE;
+    c.width = w * q; c.height = hgt * q;
     const g = c.getContext('2d');
     sp.px.forEach((row, j) => [...row].forEach((ch, i) => {
       if (ch === '.') return;
       g.fillStyle = sp.pal[ch];
-      g.fillRect((flip ? w - 1 - i : i) * PIX, j * PIX, PIX, PIX);
+      g.fillRect((flip ? w - 1 - i : i) * q, j * q, q, q);
     }));
+    c.dw = w * PIX; c.dh = hgt * PIX;   // size on screen
     return c;
   }
-  SPRITES.forEach((sp) => { sp.img = bake(sp, false); sp.imgFlip = sp.kind === 'fish' ? bake(sp, true) : sp.img; });
+  SPRITES.forEach((sp) => { sp.img = bake(sp, false); });
 
   // seeded random so the layout is the same on every visit
   let seed = 20261118;
@@ -197,9 +200,10 @@
     SPRITES.forEach((sp) => {
       floaters.push({
         sp, x: rnd() * W, y: 40 + rnd() * (H - 80),
-        vx: 0, vy: 0, ang: 0, spin: 0,
+        vx: 0, vy: 0, ang: 0, ry: 0, turnCD: 0,
         swim: sp.kind === 'fish' ? (rnd() < 0.5 ? -1 : 1) * (10 + rnd() * 10) : 0,  // fish swim a little
         phase: rnd() * 6.28,
+        flip: 0,
       });
     });
   }
@@ -208,24 +212,38 @@
   const DRAG = 1.3;     // water drag (1/s)
   const CURRENT = 7;    // slow background current (px/s)
 
+  const ease = (dt, tau) => 1 - Math.exp(-dt / tau);   // frame-rate independent smoothing
+
   function stepFloaters(dt, t) {
     for (const f of floaters) {
-      // slope of the ripple surface: floaters slide downhill, so a splash pushes them away
-      const gx = (field(f.x + CELL, f.y) - field(f.x - CELL, f.y)) / (2 * CELL);
-      const gy = (field(f.x, f.y + CELL) - field(f.x, f.y - CELL)) / (2 * CELL);
-      let ax = -PUSH * gx, ay = -PUSH * gy;
-      // fish swim with a gentle wiggle; everything rides the current
+      // slope of the ripple surface, measured over a wider footprint so it varies smoothly;
+      // floaters slide downhill, so a splash pushes them away
+      const d = CELL * 2;
+      const gx = (field(f.x + d, f.y) - field(f.x - d, f.y)) / (2 * d);
+      const gy = (field(f.x, f.y + d) - field(f.x, f.y - d)) / (2 * d);
       const target = CURRENT + f.swim;
-      ax += (target - f.vx) * 0.6;
-      ay += f.swim ? Math.sin(t * 0.7 + f.phase) * 4 : 0;
+      const ax = -PUSH * gx + (target - f.vx) * 0.6;
+      const ay = -PUSH * gy + (f.swim ? Math.sin(t * 0.7 + f.phase) * 4 : 0);
       f.vx += ax * dt; f.vy += ay * dt;
       const k = Math.exp(-DRAG * dt);
       f.vx = target + (f.vx - target) * k; f.vy *= k;
       f.x += f.vx * dt; f.y += f.vy * dt;
-      // a hard push turns a fish around to flee with it
-      if (f.swim && Math.abs(f.vx - target) > 40 && Math.sign(f.vx) !== Math.sign(f.swim)) f.swim = -f.swim;
-      // spin from the local slope, settling back
-      f.spin += (-(gx * 2.5) - f.ang * 2) * dt * 3; f.spin *= Math.exp(-3 * dt); f.ang += f.spin * dt;
+
+      // a hard shove makes a fish turn and flee with it (at most once every few seconds)
+      f.turnCD = Math.max(0, f.turnCD - dt);
+      if (f.swim && !f.turnCD && Math.abs(f.vx - target) > 45 && Math.sign(f.vx) !== Math.sign(f.swim)) {
+        f.swim = -f.swim; f.turnCD = 3;
+      }
+      // heading eases toward the swim direction, so a turn looks like a turn, not a flicker
+      const face = f.swim ? Math.sign(f.swim) : 0;
+      if (!f.flip) f.flip = face || 1;
+      f.flip += ((face || f.flip) - f.flip) * ease(dt, 0.18);
+
+      // bob and tilt from the ripples, low-passed so they never jitter
+      f.ry += (field(f.x, f.y) - f.ry) * ease(dt, 0.12);
+      const tiltTarget = Math.max(-0.5, Math.min(0.5, -gx * 1.4));
+      f.ang += (tiltTarget - f.ang) * ease(dt, 0.25);
+
       // wrap around the screen
       const m = 50;
       if (f.x < -m) f.x = W + m; else if (f.x > W + m) f.x = -m;
@@ -234,19 +252,19 @@
   }
 
   function drawFloaters(t) {
-    ctx.imageSmoothingEnabled = false;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     for (const f of floaters) {
       const [dx, dy] = swellAt(f.x, f.y, t);
-      const r = field(f.x, f.y);
-      // tilt with the swell slope plus the ripple response
-      const [dx2, dy2] = swellAt(f.x + 6, f.y, t);
-      const tilt = Math.atan2(dy2 - dy, 6 + dx2 - dx) * 0.6 + f.ang + Math.sin(t * 1.3 + f.phase) * 0.05;
-      const img = f.sp.kind === 'fish' && f.vx > 0 ? f.sp.imgFlip : f.sp.img;
+      const [dx2, dy2] = swellAt(f.x + 8, f.y, t);
+      const tilt = Math.atan2(dy2 - dy, 8 + dx2 - dx) * 0.6 + f.ang + Math.sin(t * 1.3 + f.phase) * 0.05;
+      const img = f.sp.img;
       ctx.save();
       ctx.globalAlpha = 0.85;
-      ctx.translate(Math.round(f.x + dx), Math.round(f.y + dy - r));
+      ctx.translate(f.x + dx, f.y + dy - f.ry);      // sub-pixel, no rounding
       ctx.rotate(tilt);
-      ctx.drawImage(img, -img.width / 2, -img.height / 2);
+      if (f.sp.kind === 'fish') ctx.scale(-f.flip, 1); // sprite art faces left
+      ctx.drawImage(img, -img.dw / 2, -img.dh / 2, img.dw, img.dh);
       ctx.restore();
     }
   }
