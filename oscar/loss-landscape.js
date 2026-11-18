@@ -53,6 +53,7 @@
     }
     root.innerHTML = '<canvas></canvas><div class="ll-hint">click to drop a start · drag start or a valley · R replay</div>';
     const cv = root.querySelector('canvas');
+    const hint = root.querySelector('.ll-hint');
     const ctx = cv.getContext('2d');
 
     // ---------- settings ----------
@@ -424,6 +425,7 @@
     function resize() {
       const r = root.getBoundingClientRect();
       W = Math.max(1, r.width); H = Math.max(1, r.height); A = H / W;
+    if (hint) hint.style.display = W < 520 ? 'none' : '';   // hide hint when the widget is small
       DPR = Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
       readTheme();
